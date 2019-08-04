@@ -1,3 +1,7 @@
 version: "2"
 domain: pingdom.mig4.gitlab.io
 repo: gitlab.com/mig4/pingdom-operator
+resources:
+- group: observability
+  version: v1alpha1
+  kind: Check
