@@ -1,0 +1,180 @@
+
+---
+apiVersion: apiextensions.k8s.io/v1beta1
+kind: CustomResourceDefinition
+metadata:
+  creationTimestamp: null
+  name: checks.observability.pingdom.mig4.gitlab.io
+spec:
+  additionalPrinterColumns:
+  - JSONPath: .status.id
+    description: Check ID
+    name: ID
+    type: string
+  - JSONPath: .status.type
+    description: Check type
+    name: type
+    type: string
+  - JSONPath: .status.status
+    description: Check status
+    name: status
+    type: string
+  - JSONPath: .status.paused
+    description: Pasused
+    name: paused
+    type: boolean
+  group: observability.pingdom.mig4.gitlab.io
+  names:
+    kind: Check
+    plural: checks
+  scope: ""
+  subresources:
+    status: {}
+  validation:
+    openAPIV3Schema:
+      description: Check is the Schema for the checks API
+      properties:
+        apiVersion:
+          description: 'APIVersion defines the versioned schema of this representation
+            of an object. Servers should convert recognized schemas to the latest
+            internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#resources'
+          type: string
+        kind:
+          description: 'Kind is a string value representing the REST resource this
+            object represents. Servers may infer this from the endpoint the client
+            submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/api-conventions.md#types-kinds'
+          type: string
+        metadata:
+          type: object
+        spec:
+          description: CheckSpec defines the desired state of Check
+          properties:
+            credentialsSecret:
+              description: Secret storing Pingdom API credentials
+              properties:
+                name:
+                  description: 'Name of the referent. More info: https://kubernetes.io/docs/concepts/overview/working-with-objects/names/#names
+                    TODO: Add other useful fields. apiVersion, kind, uid?'
+                  type: string
+              type: object
+            encryption:
+              description: Connection encryption; defaults to false
+              type: boolean
+            host:
+              description: Target host
+              type: string
+            name:
+              description: Check name; defaults to name of the object in Kubernetes
+              type: string
+            paused:
+              description: Paused; defaults to false.
+              type: boolean
+            port:
+              description: 'Target port Required for check types: tcp, udp Optional
+                for: http(80), httpcustom(80), smtp(25), pop3(110), imap(143)'
+              format: int32
+              type: integer
+            type:
+              description: 'Type of check, can be one of: http, httpcustom, tcp, ping,
+                dns, udp, smtp, pop3, imap'
+              enum:
+              - http
+              - httpcustom
+              - tcp
+              - ping
+              - dns
+              - udp
+              - smtp
+              - pop3
+              - imap
+              type: string
+            url:
+              description: Target path on server Defaults to `/`.
+              type: string
+          required:
+          - credentialsSecret
+          - host
+          - type
+          type: object
+        status:
+          description: CheckStatus defines the observed state of Check
+          properties:
+            created:
+              description: Check creation time.
+              format: date-time
+              type: string
+            encryption:
+              description: Connection encryption; defaults to false
+              type: boolean
+            host:
+              description: Target host
+              type: string
+            id:
+              description: Check identifier
+              format: int32
+              type: integer
+            lasterrortime:
+              description: Timestamp of last error (if any).
+              format: date-time
+              type: string
+            lastresponsetime:
+              description: Response time (in milliseconds) of last test.
+              format: int64
+              type: integer
+            lasttesttime:
+              description: Timestamp of last test (if any).
+              format: date-time
+              type: string
+            name:
+              description: Check name
+              type: string
+            paused:
+              description: Paused; defaults to false.
+              type: boolean
+            port:
+              description: Target port
+              format: int32
+              type: integer
+            status:
+              description: Current check status
+              enum:
+              - up
+              - down
+              - unconfirmed_down
+              - unknown
+              - paused
+              type: string
+            type:
+              description: Type of check
+              enum:
+              - http
+              - httpcustom
+              - tcp
+              - ping
+              - dns
+              - udp
+              - smtp
+              - pop3
+              - imap
+              type: string
+            url:
+              description: Target path on server Defaults to `/`.
+              type: string
+          required:
+          - created
+          - host
+          - id
+          - status
+          - type
+          type: object
+      type: object
+  versions:
+  - name: v1alpha1
+    served: true
+    storage: true
+status:
+  acceptedNames:
+    kind: ""
+    plural: ""
+  conditions: []
+  storedVersions: []

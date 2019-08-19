@@ -3,5 +3,8 @@ kind: Check
 metadata:
   name: check-sample
 spec:
-  # Add fields here
-  foo: bar
+  host: wtfismyip.com
+  type: http
+  url: /text
+  credentialsSecret:
+    name: pd-pass-mig

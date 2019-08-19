@@ -47,7 +47,10 @@ func TestAPIs(t *testing.T) {
 		[]Reporter{envtest.NewlineReporter{}})
 }
 
-var _ = BeforeSuite(func(done Done) {
+func PBeforeSuite(b interface{}, t ...int) bool { return true }
+func PAfterSuite(b interface{}, t ...int) bool  { return true }
+
+var _ = PBeforeSuite(func(done Done) {
 	logf.SetLogger(zap.LoggerTo(GinkgoWriter, true))
 
 	By("bootstrapping test environment")
@@ -72,7 +75,7 @@ var _ = BeforeSuite(func(done Done) {
 	close(done)
 }, 60)
 
-var _ = AfterSuite(func() {
+var _ = PAfterSuite(func() {
 	By("tearing down the test environment")
 	err := testEnv.Stop()
 	Expect(err).ToNot(HaveOccurred())
