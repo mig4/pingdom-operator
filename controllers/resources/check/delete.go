@@ -19,11 +19,17 @@ func (cr *checkReconciler) delete() error {
 	log := cr.log.WithValues("action", "delete", "id", cr.check.Status.Id)
 	log.Info("deleting check resource from Pingdom")
 	resp, err := cr.pdClient.Checks.Delete(int(cr.check.Status.Id))
-	// TODO: check if err is 404 in which case it's already deleted so OK
-	if err == nil {
-		log.Info("deleted check resource from Pingdom", "message", resp.Message)
-	} else {
+	if err != nil {
 		log.Error(err, "unable to delete the Pingdom check resource")
+		return ignoreNotFound(err)
 	}
+	log.Info("deleted check resource from Pingdom", "message", resp.Message)
 	return nil
+}
+
+func ignoreNotFound(err error) error {
+	if IsInvalidIdentifierError(err) {
+		return nil
+	}
+	return err
 }
