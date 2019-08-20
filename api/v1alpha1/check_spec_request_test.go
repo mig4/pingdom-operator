@@ -27,12 +27,13 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 		spec   CheckSpec
 		params map[string]string
 	)
-	// TODO: PutParams cannot include `Type` parameter, otherwise Pingdom API
-	//   returns 400 error (bad request)
 
 	// Common specifications logic
 	AssertSuccess := func(paramsDesc string) {
 		Specify("PutParams returns a "+paramsDesc, func() {
+			// PutParams cannot include `Type` parameter, otherwise Pingdom API
+			// returns error 400 (bad request)
+			delete(params, "type")
 			Expect(spec.PutParams()).To(Equal(params))
 		})
 
@@ -47,6 +48,9 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 
 	AssertFailure := func(errSubstring string) {
 		Specify("PutParams returns an empty map", func() {
+			// PutParams cannot include `Type` parameter, otherwise Pingdom API
+			// returns error 400 (bad request)
+			delete(params, "type")
 			Expect(spec.PutParams()).To(Equal(params))
 		})
 
@@ -81,7 +85,7 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 			}
 		})
 
-		AssertSuccess("map with all properties")
+		AssertSuccess("map with all required properties")
 	})
 
 	Context("When the Spec contains unset optional values", func() {
@@ -98,17 +102,7 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 			}
 		})
 
-		Specify("PutParams returns a map with specified properties only", func() {
-			Expect(spec.PutParams()).To(Equal(params))
-		})
-
-		Specify("PostParams returns a map with specified properties only", func() {
-			Expect(spec.PostParams()).To(Equal(params))
-		})
-
-		Specify("Valid returns no errors", func() {
-			Expect(spec.Valid()).To(BeNil())
-		})
+		AssertSuccess("map with specified properties only")
 	})
 
 	Context("When the Spec contains missing required values", func() {

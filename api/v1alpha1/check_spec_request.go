@@ -32,6 +32,20 @@ TODO: moving these methods to Check would allow e.g. PUT to be smarter and
   only output fields that have changed, or handling clearing of fields
 */
 func (this *CheckSpec) PutParams() map[string]string {
+	params := this.PostParams()
+	delete(params, "type")
+	return params
+}
+
+/*
+PostParams returns a map of parameters to send in POST requests (for creating
+a check) to the Pingdom API.
+
+Only non-nil properties of the CheckSpec are included in the resulting map.
+
+Implements pingdom.Check interface.
+*/
+func (this *CheckSpec) PostParams() map[string]string {
 	if err := this.Valid(); err != nil {
 		return map[string]string{}
 	}
@@ -59,18 +73,6 @@ func (this *CheckSpec) PutParams() map[string]string {
 	}
 
 	return params
-}
-
-/*
-PostParams returns a map of parameters to send in POST requests (for creating
-a check) to the Pingdom API.
-
-Only non-nil properties of the CheckSpec are included in the resulting map.
-
-Implements pingdom.Check interface.
-*/
-func (this *CheckSpec) PostParams() map[string]string {
-	return this.PutParams()
 }
 
 /*
