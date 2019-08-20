@@ -63,7 +63,7 @@ func main() {
 
 	if err = (&controllers.CheckReconciler{
 		Client:   mgr.GetClient(),
-		Log:      ctrl.Log.WithName("controllers").WithName("Check"),
+		Log:      ctrl.Log.WithName("pingdom").WithName("controller"),
 		PdApiKey: "g93ih2cttviiska6b29xy63y3f7dqe4g",
 	}).SetupWithManager(mgr); err != nil {
 		setupLog.Error(err, "unable to create controller", "controller", "Check")

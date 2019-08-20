@@ -13,30 +13,18 @@ See the License for the specific language governing permissions and
 limitations under the License.
 */
 
-package controllers
+package check
 
-/*
-sliceContains returns true if given slice contains the given string, false
-otherwise
-*/
-func sliceContains(slice []string, element string) bool {
-	for _, item := range slice {
-		if item == element {
-			return true
-		}
+func (cr *checkReconciler) create() error {
+	log := cr.log.WithValues("action", "create")
+	log.Info("creating check resource on Pingdom")
+	resp, err := cr.pdClient.Checks.Create(&cr.check.Spec)
+	log.V(1).Info(
+		"Pingdom Checks.Create() response", "response", resp, "error", err,
+	)
+	if err == nil {
+		cr.check.Status.Id = int32(resp.ID)
+		log.Info("created check resource on Pingdom", "id", resp.ID)
 	}
-	return false
-}
-
-/*
-sliceRemove removes given element from slice, returns the updated slice
-*/
-func sliceRemove(slice []string, element string) (result []string) {
-	for _, item := range slice {
-		if item == element {
-			continue
-		}
-		result = append(result, item)
-	}
-	return
+	return err
 }
