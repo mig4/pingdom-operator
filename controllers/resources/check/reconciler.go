@@ -40,8 +40,12 @@ func (cr *checkReconciler) EnsureState(ctx context.Context) (err error) {
 		err = cr.delete()
 	} else if cr.check.Status.Id == 0 {
 		err = cr.create()
-	} else {
+	} else if cr.check.NeedsUpdate() {
 		err = cr.update()
+	} else {
+		log.V(1).Info(
+			"check is up-to-date with regards to its spec", "id", cr.check.Status.Id,
+		)
 	}
 
 	log.Info("finished reconciling external resource state")
