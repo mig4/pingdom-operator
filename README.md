@@ -13,6 +13,9 @@ cluster (needs `kubectl` configured correctly).
 
 You can then run the manager locally, just `./bin/manager` or `make run`.
 
+Run tests with `make test` or `make gtest` (using
+[Ginkgo](http://onsi.github.io/ginkgo/) runner).
+
 ## Usage
 
 Once the CRD is installed (with `make install`) you can deploy Pingdom checks.
