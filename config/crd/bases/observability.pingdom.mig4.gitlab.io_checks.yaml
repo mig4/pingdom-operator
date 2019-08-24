@@ -126,13 +126,14 @@ spec:
               format: date-time
               type: string
             name:
-              description: Check name
+              description: Check name; defaults to name of the object in Kubernetes
               type: string
             paused:
               description: Paused; defaults to false.
               type: boolean
             port:
-              description: Target port
+              description: 'Target port Required for check types: tcp, udp Optional
+                for: http(80), httpcustom(80), smtp(25), pop3(110), imap(143)'
               format: int32
               type: integer
             status:
@@ -145,7 +146,8 @@ spec:
               - paused
               type: string
             type:
-              description: Type of check
+              description: 'Type of check, can be one of: http, httpcustom, tcp, ping,
+                dns, udp, smtp, pop3, imap'
               enum:
               - http
               - httpcustom

@@ -53,8 +53,8 @@ const (
 	Imap CheckType = "imap"
 )
 
-// CheckSpec defines the desired state of Check
-type CheckSpec struct {
+// Parameters of a Check in Pingdom
+type CheckParameters struct {
 	// Check name; defaults to name of the object in Kubernetes
 	// +optional
 	Name *string `json:"name"`
@@ -88,6 +88,12 @@ type CheckSpec struct {
 	// Connection encryption; defaults to false
 	// +optional
 	Encryption *bool `json:"encryption,omitempty"`
+}
+
+// CheckSpec defines the desired state of Check
+type CheckSpec struct {
+	// Parameters of a Check
+	CheckParameters `json:",inline"`
 
 	// Secret storing Pingdom API credentials
 	CredentialsSecret corev1.LocalObjectReference `json:"credentialsSecret"`
@@ -99,29 +105,14 @@ type CheckResult string
 
 // CheckStatus defines the observed state of Check
 type CheckStatus struct {
+	// Parameters of a Check
+	CheckParameters `json:",inline"`
+
 	// Check identifier
 	Id int32 `json:"id"`
 
-	// Check name
-	// +optional
-	Name *string `json:"name"`
-
-	// Type of check
-	Type CheckType `json:"type"`
-
-	// Target host
-	Host string `json:"host"`
-
-	// Target port
-	// +optional
-	Port *int32 `json:"port,omitempty"`
-
 	// Current check status
 	Status CheckResult `json:"status"`
-
-	// Paused; defaults to false.
-	// +optional
-	Paused *bool `json:"paused,omitempty"`
 
 	// Timestamp of last error (if any).
 	// +optional
@@ -137,17 +128,6 @@ type CheckStatus struct {
 
 	// Check creation time.
 	CreatedTime metav1.Time `json:"created"`
-
-	// HTTP Checks
-
-	// Target path on server
-	// Defaults to `/`.
-	// +optional
-	Url *string `json:"url,omitempty"`
-
-	// Connection encryption; defaults to false
-	// +optional
-	Encryption *bool `json:"encryption,omitempty"`
 }
 
 // +kubebuilder:object:root=true

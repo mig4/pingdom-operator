@@ -66,13 +66,15 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 	Context("When the Spec is correct", func() {
 		BeforeEach(func() {
 			spec = CheckSpec{
-				Name:       ptrS("foo"),
-				Host:       "foo.example.com",
-				Type:       Http,
-				Paused:     ptrB(false),
-				Port:       ptrI32(443),
-				Url:        ptrS("/text"),
-				Encryption: ptrB(true),
+				CheckParameters: CheckParameters{
+					Name:       ptrS("foo"),
+					Host:       "foo.example.com",
+					Type:       Http,
+					Paused:     ptrB(false),
+					Port:       ptrI32(443),
+					Url:        ptrS("/text"),
+					Encryption: ptrB(true),
+				},
 			}
 			params = map[string]string{
 				"name":       "foo",
@@ -90,11 +92,11 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 
 	Context("When the Spec contains unset optional values", func() {
 		BeforeEach(func() {
-			spec = CheckSpec{
+			spec = CheckSpec{CheckParameters: CheckParameters{
 				Name: ptrS("bar"),
 				Host: "bar.example.com",
 				Type: Ping,
-			}
+			}}
 			params = map[string]string{
 				"name": "bar",
 				"host": "bar.example.com",
@@ -116,12 +118,12 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 
 	Context("When the Spec contains invalid values", func() {
 		BeforeEach(func() {
-			spec = CheckSpec{
+			spec = CheckSpec{CheckParameters: CheckParameters{
 				Name: ptrS("bad-type-port"),
 				Host: "bad.example.com",
 				Type: CheckType("pong"),
 				Port: ptrI32(10000),
-			}
+			}}
 			params = map[string]string{}
 		})
 
