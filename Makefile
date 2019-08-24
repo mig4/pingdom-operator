@@ -17,6 +17,10 @@ all: manager
 test: generate fmt vet manifests
 	go test ./api/... ./controllers/... -coverprofile cover.out
 
+# Run tests using Ginkgo runner
+gtest: generate fmt vet manifests
+	ginkgo ./api/... ./controllers/... -coverprofile cover.out
+
 # Build manager binary
 manager: generate fmt vet
 	go build -o bin/manager main.go
