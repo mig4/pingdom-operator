@@ -73,11 +73,11 @@ var _ = Describe("CheckStatusComparator", func() {
 		}, BeTrue()),
 		Entry("with different paused setting", &Check{
 			Spec: CheckSpec{CheckParameters: CheckParameters{
-				Name: ptrS("quuz"), Host: "quuz", Type: Http, Paused: ptrB(true),
-			}},
+				Name: ptrS("quuz"), Host: "quuz", Type: Http,
+			}, Paused: ptrB(true)},
 			Status: CheckStatus{Id: 6, CheckParameters: CheckParameters{
-				Name: ptrS("quuz"), Host: "quuz", Type: Http, Paused: ptrB(false),
-			}},
+				Name: ptrS("quuz"), Host: "quuz", Type: Http,
+			}, Status: Up},
 		}, BeTrue()),
 		Entry("with different URL", &Check{
 			Spec: CheckSpec{CheckParameters: CheckParameters{

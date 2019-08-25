@@ -19,10 +19,6 @@ spec:
     description: Check status
     name: status
     type: string
-  - JSONPath: .status.paused
-    description: Pasused
-    name: paused
-    type: boolean
   group: observability.pingdom.mig4.gitlab.io
   names:
     kind: Check
@@ -67,7 +63,9 @@ spec:
               description: Check name; defaults to name of the object in Kubernetes
               type: string
             paused:
-              description: Paused; defaults to false.
+              description: Paused; defaults to false. Note this is a spec only field
+                as Pingdom API read operations indicate a paused state by the `status`
+                field being set to `paused`.
               type: boolean
             port:
               description: 'Target port Required for check types: tcp, udp Optional
@@ -128,9 +126,6 @@ spec:
             name:
               description: Check name; defaults to name of the object in Kubernetes
               type: string
-            paused:
-              description: Paused; defaults to false.
-              type: boolean
             port:
               description: 'Target port Required for check types: tcp, udp Optional
                 for: http(80), httpcustom(80), smtp(25), pop3(110), imap(143)'

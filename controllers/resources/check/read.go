@@ -39,7 +39,6 @@ func (cr *checkReconciler) read() error {
 	status.Type = observabilityv1alpha1.CheckType(pdCheck.Type.Name)
 	status.Host = pdCheck.Hostname
 	status.Status = observabilityv1alpha1.CheckResult(pdCheck.Status)
-	status.Paused = &pdCheck.Paused
 	status.LastErrorTime = parsePdTime(pdCheck.LastErrorTime)
 	status.LastTestTime = parsePdTime(pdCheck.LastTestTime)
 	status.LastResponseTimeMilis = &pdCheck.LastResponseTime

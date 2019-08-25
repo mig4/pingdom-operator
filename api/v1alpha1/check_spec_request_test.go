@@ -70,11 +70,11 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 					Name:       ptrS("foo"),
 					Host:       "foo.example.com",
 					Type:       Http,
-					Paused:     ptrB(false),
 					Port:       ptrI32(443),
 					Url:        ptrS("/text"),
 					Encryption: ptrB(true),
 				},
+				Paused: ptrB(false),
 			}
 			params = map[string]string{
 				"name":       "foo",
