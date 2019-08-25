@@ -145,6 +145,7 @@ type CheckStatus struct {
 // +kubebuilder:printcolumn:name="ID",type=string,JSONPath=`.status.id`,description="Check ID"
 // +kubebuilder:printcolumn:name="type",type=string,JSONPath=`.status.type`,description="Check type"
 // +kubebuilder:printcolumn:name="status",type=string,JSONPath=`.status.status`,description="Check status"
+// +kubebuilder:printcolumn:name="host",type=string,JSONPath=`.status.host`,description="Target host"
 
 // Check is the Schema for the checks API
 type Check struct {
