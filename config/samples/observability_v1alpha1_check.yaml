@@ -6,5 +6,6 @@ spec:
   host: wtfismyip.com
   type: http
   url: /text
+  paused: false
   credentialsSecret:
     name: pd-pass-mig

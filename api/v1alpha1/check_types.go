@@ -53,6 +53,18 @@ const (
 	Imap CheckType = "imap"
 )
 
+// Status/result of a check.
+// +kubebuilder:validation:Enum=up;down;unconfirmed_down;unknown;paused
+type CheckResult string
+
+const (
+	Up              CheckResult = "up"
+	Down            CheckResult = "down"
+	UnconfirmedDown CheckResult = "unconfirmed_down"
+	Unknown         CheckResult = "unknown"
+	Paused          CheckResult = "paused"
+)
+
 // Parameters of a Check in Pingdom
 type CheckParameters struct {
 	// Check name; defaults to name of the object in Kubernetes
@@ -65,10 +77,6 @@ type CheckParameters struct {
 	// Type of check, can be one of:
 	// http, httpcustom, tcp, ping, dns, udp, smtp, pop3, imap
 	Type CheckType `json:"type"`
-
-	// Paused; defaults to false.
-	// +optional
-	Paused *bool `json:"paused,omitempty"`
 
 	// Target port
 	// Required for check types: tcp, udp
@@ -95,13 +103,15 @@ type CheckSpec struct {
 	// Parameters of a Check
 	CheckParameters `json:",inline"`
 
+	// Paused; defaults to false.
+	// Note this is a spec only field as Pingdom API read operations indicate
+	// a paused state by the `status` field being set to `paused`.
+	// +optional
+	Paused *bool `json:"paused,omitempty"`
+
 	// Secret storing Pingdom API credentials
 	CredentialsSecret corev1.LocalObjectReference `json:"credentialsSecret"`
 }
-
-// Status/result of a check.
-// +kubebuilder:validation:Enum=up;down;unconfirmed_down;unknown;paused
-type CheckResult string
 
 // CheckStatus defines the observed state of Check
 type CheckStatus struct {
@@ -135,7 +145,6 @@ type CheckStatus struct {
 // +kubebuilder:printcolumn:name="ID",type=string,JSONPath=`.status.id`,description="Check ID"
 // +kubebuilder:printcolumn:name="type",type=string,JSONPath=`.status.type`,description="Check type"
 // +kubebuilder:printcolumn:name="status",type=string,JSONPath=`.status.status`,description="Check status"
-// +kubebuilder:printcolumn:name="paused",type=boolean,JSONPath=`.status.paused`,description="Pasused"
 
 // Check is the Schema for the checks API
 type Check struct {

@@ -182,7 +182,7 @@ func (r *CheckReconciler) initCheckDefaults(
 		check.Status.Name = check.Spec.Name
 	}
 	if string(check.Status.Status) == "" {
-		check.Status.Status = observabilityv1alpha1.CheckResult("unknown")
+		check.Status.Status = observabilityv1alpha1.Unknown
 		log.V(1).Info("using default Status", "status", check.Status.Status)
 	}
 	if string(check.Status.Type) == "" {

@@ -28,25 +28,32 @@ The Spec reflects requested state of the resource while Status reflects its
 state in Kubernetes.
 */
 func (this *Check) NeedsUpdate() bool {
-	if fieldNeedsUpdate(this.Spec.Name, this.Status.Name) {
+	spec := &this.Spec
+	status := &this.Status
+
+	if fieldNeedsUpdate(spec.Name, status.Name) {
 		return true
 	}
-	if this.Spec.Host != this.Status.Host {
+	if spec.Host != status.Host {
 		return true
 	}
-	if this.Spec.Type != this.Status.Type {
+	if spec.Type != status.Type {
 		return true
 	}
-	if fieldNeedsUpdate(this.Spec.Paused, this.Status.Paused) {
+	if spec.Paused != nil {
+		if *spec.Paused && status.Status != Paused {
+			return true
+		} else if !*spec.Paused && status.Status == Paused {
+			return true
+		}
+	}
+	if fieldNeedsUpdate(spec.Port, status.Port) {
 		return true
 	}
-	if fieldNeedsUpdate(this.Spec.Port, this.Status.Port) {
+	if fieldNeedsUpdate(spec.Url, status.Url) {
 		return true
 	}
-	if fieldNeedsUpdate(this.Spec.Url, this.Status.Url) {
-		return true
-	}
-	if fieldNeedsUpdate(this.Spec.Encryption, this.Status.Encryption) {
+	if fieldNeedsUpdate(spec.Encryption, status.Encryption) {
 		return true
 	}
 	return false

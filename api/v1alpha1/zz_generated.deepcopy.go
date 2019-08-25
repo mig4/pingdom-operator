@@ -91,11 +91,6 @@ func (in *CheckParameters) DeepCopyInto(out *CheckParameters) {
 		*out = new(string)
 		**out = **in
 	}
-	if in.Paused != nil {
-		in, out := &in.Paused, &out.Paused
-		*out = new(bool)
-		**out = **in
-	}
 	if in.Port != nil {
 		in, out := &in.Port, &out.Port
 		*out = new(int32)
@@ -127,6 +122,11 @@ func (in *CheckParameters) DeepCopy() *CheckParameters {
 func (in *CheckSpec) DeepCopyInto(out *CheckSpec) {
 	*out = *in
 	in.CheckParameters.DeepCopyInto(&out.CheckParameters)
+	if in.Paused != nil {
+		in, out := &in.Paused, &out.Paused
+		*out = new(bool)
+		**out = **in
+	}
 	out.CredentialsSecret = in.CredentialsSecret
 }
 
