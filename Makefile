@@ -19,7 +19,7 @@ test: generate fmt vet manifests
 
 # Run tests using Ginkgo runner
 gtest: generate fmt vet manifests
-	ginkgo ./api/... ./controllers/... -coverprofile cover.out
+	ginkgo -r --randomizeAllSpecs --randomizeSuites --failOnPending --cover --outputdir . --coverprofile cover.out --trace --race --progress
 
 # Build manager binary
 manager: generate fmt vet
