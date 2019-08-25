@@ -19,6 +19,10 @@ spec:
     description: Check status
     name: status
     type: string
+  - JSONPath: .status.host
+    description: Target host
+    name: host
+    type: string
   group: observability.pingdom.mig4.gitlab.io
   names:
     kind: Check
