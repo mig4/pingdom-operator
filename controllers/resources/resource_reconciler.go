@@ -37,4 +37,10 @@ type ResourceReconciler interface {
 	// FinalizerName returns a base name of the finalizer for this reconciler
 	// or nil if this reconciler doesn't do finalization
 	FinalizerName() *string
+
+	// DidWork indicates if the reconciler actually did any work in its
+	// `EnsureState` method. The reconciler may determine that it has nothing
+	// to do, e.g. if the external resource already matches the desired state,
+	// in which case this will return false.
+	DidWork() bool
 }

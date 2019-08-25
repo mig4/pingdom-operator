@@ -55,3 +55,7 @@ func (cr *checkReconciler) EnsureState(ctx context.Context) (err error) {
 func (cr *checkReconciler) FinalizerName() *string {
 	return &Name
 }
+
+func (cr *checkReconciler) DidWork() bool {
+	return cr.didWork
+}
