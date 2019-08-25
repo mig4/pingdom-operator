@@ -108,13 +108,14 @@ func (r *CheckReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 		}
 	}
 
-	// TODO: implement a webhook receiver and configure a webhook on Pingdom
-	//   side to notify of any changes so we don't need to guess when to
-	//   reconcile next to update the status again
-	// Update after the check executes on Pingdom next (based on default check
-	// resolution).
-	log.Info("exiting Reconcile, next run in 5m")
-	delay, _ := time.ParseDuration("5m")
+	// Schedule next run after some time.
+	nextIn := "1m" // normally "5m" == default Pingdom resolution
+	if reconciler.DidWork() {
+		log.V(1).Info("reconciler.DidWork == true")
+		nextIn = "10s"
+	}
+	log.Info("exiting Reconcile, scheduling next run", "nextIn", nextIn)
+	delay, _ := time.ParseDuration(nextIn)
 	return ctrl.Result{RequeueAfter: delay}, nil
 }
 

@@ -25,6 +25,7 @@ func (cr *checkReconciler) create() error {
 	if err == nil {
 		cr.check.Status.Id = int32(resp.ID)
 		log.Info("created check resource on Pingdom", "id", resp.ID)
+		cr.didWork = true
 	}
 	return err
 }

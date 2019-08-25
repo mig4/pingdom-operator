@@ -22,6 +22,7 @@ func (cr *checkReconciler) update() error {
 	log.V(1).Info("Pingdom Checks.Update() response", "response", resp, "error", err)
 	if err == nil {
 		log.Info("updated check resource on Pingdom", "message", resp.Message)
+		cr.didWork = true
 	}
 	return err
 }

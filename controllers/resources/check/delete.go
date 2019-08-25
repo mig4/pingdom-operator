@@ -24,6 +24,7 @@ func (cr *checkReconciler) delete() error {
 		return ignoreNotFound(err)
 	}
 	log.Info("deleted check resource from Pingdom", "message", resp.Message)
+	cr.didWork = true
 	return nil
 }
 

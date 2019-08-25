@@ -36,6 +36,8 @@ type checkReconciler struct {
 	log      logr.Logger
 	pdClient *pingdom.Client
 	check    *observabilityv1alpha1.Check
+
+	didWork bool
 }
 
 /*
@@ -48,5 +50,6 @@ func New(config *Config) resources.ResourceReconciler {
 		),
 		pdClient: config.PdClient,
 		check:    config.Check,
+		didWork:  false,
 	}
 }
