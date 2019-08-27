@@ -86,6 +86,10 @@ type CheckParameters struct {
 	// +optional
 	Port *int32 `json:"port,omitempty"`
 
+	// User identifiers of users who should receive alerts
+	// +optional
+	UserIds *[]int `json:"userids,omitempty"`
+
 	// HTTP Checks
 
 	// Target path on server

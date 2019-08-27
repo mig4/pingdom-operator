@@ -1,0 +1,11 @@
+apiVersion: observability.pingdom.mig4.gitlab.io/v1alpha1
+kind: Check
+metadata:
+  name: sample-1
+spec:
+  host: wtfismyip.com
+  type: http
+  url: /text
+  paused: false
+  credentialsSecret:
+    name: pd-pass-mig

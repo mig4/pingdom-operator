@@ -111,7 +111,7 @@ func (r *CheckReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	// Schedule next run after some time.
 	nextIn := "1m" // normally "5m" == default Pingdom resolution
 	if reconciler.DidWork() {
-		log.V(1).Info("reconciler.DidWork == true")
+		log.V(1).Info("reconciler.DidWork == true", "obj", &check)
 		nextIn = "10s"
 	}
 	log.Info("exiting Reconcile, scheduling next run", "nextIn", nextIn)

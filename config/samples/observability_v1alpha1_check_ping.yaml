@@ -1,11 +1,11 @@
 apiVersion: observability.pingdom.mig4.gitlab.io/v1alpha1
 kind: Check
 metadata:
-  name: check-sample
+  name: sample-2
 spec:
-  host: wtfismyip.com
-  type: http
-  url: /text
+  host: error-service.io
+  type: ping
+  userids: [14407766]
   paused: false
   credentialsSecret:
     name: pd-pass-mig
