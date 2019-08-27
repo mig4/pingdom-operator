@@ -96,6 +96,15 @@ func (in *CheckParameters) DeepCopyInto(out *CheckParameters) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.UserIds != nil {
+		in, out := &in.UserIds, &out.UserIds
+		*out = new([]int)
+		if **in != nil {
+			in, out := *in, *out
+			*out = make([]int, len(*in))
+			copy(*out, *in)
+		}
+	}
 	if in.Url != nil {
 		in, out := &in.Url, &out.Url
 		*out = new(string)

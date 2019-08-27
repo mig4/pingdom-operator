@@ -16,30 +16,25 @@ limitations under the License.
 package v1alpha1
 
 import (
-	"fmt"
-	"reflect"
+	"github.com/google/go-cmp/cmp"
+	"github.com/google/go-cmp/cmp/cmpopts"
 )
 
 /*
-NeedsUpdate returns true if this check resource needs to be updated in Kube
-because its Spec differs from its Status.
+NeedsUpdate returns true if the external resource coresponding to this check
+needs to be updated because its Spec differs from its Status.
 
 The Spec reflects requested state of the resource while Status reflects its
 state in Kubernetes.
+
+Optional fields that aren't set in the Spec do not affect the comparison (in
+this case the field in Status may still be set as it reflects the default value
+returned from Pingdom API, but that's of no consequence).
 */
 func (this *Check) NeedsUpdate() bool {
 	spec := &this.Spec
 	status := &this.Status
 
-	if fieldNeedsUpdate(spec.Name, status.Name) {
-		return true
-	}
-	if spec.Host != status.Host {
-		return true
-	}
-	if spec.Type != status.Type {
-		return true
-	}
 	if spec.Paused != nil {
 		if *spec.Paused && status.Status != Paused {
 			return true
@@ -47,86 +42,32 @@ func (this *Check) NeedsUpdate() bool {
 			return true
 		}
 	}
-	if fieldNeedsUpdate(spec.Port, status.Port) {
-		return true
+
+	opts := make(cmp.Options, 0)
+	unspecifiedFields := make([]string, 0)
+
+	if spec.Name == nil {
+		unspecifiedFields = append(unspecifiedFields, "Name")
 	}
-	if fieldNeedsUpdate(spec.Url, status.Url) {
-		return true
+	if spec.Port == nil {
+		unspecifiedFields = append(unspecifiedFields, "Port")
 	}
-	if fieldNeedsUpdate(spec.Encryption, status.Encryption) {
-		return true
+	if spec.UserIds == nil {
+		unspecifiedFields = append(unspecifiedFields, "UserIds")
 	}
-	return false
-}
-
-/*
-fieldNeedsUpdate returns true if status of a field doesn't match what's
-expected according to its spec.
-
-This is determined as follows:
-
-- if spec is a nil pointer, return false (it means no specific value was
-  requested, status may still reflect a default but it is of no consequence)
-- if both are nil return false
-- if their dereferenced values are equal return false
-- otherwise return true
-
-Note: only works on pointers to primitive types; use on individual fields
-*/
-func fieldNeedsUpdate(specField, statusField interface{}) bool {
-	if specField == nil || statusField == nil {
-		// shouldn't happen, interface wrapper type is nil, not the underlying
-		// pointer; see https://groups.google.com/forum/#!topic/golang-nuts/wnH302gBa4I/discussion
-		panic("a nil interface given as spec or status field")
+	if spec.Url == nil {
+		unspecifiedFields = append(unspecifiedFields, "Url")
+	}
+	if spec.Encryption == nil {
+		unspecifiedFields = append(unspecifiedFields, "Encryption")
 	}
 
-	specVal := reflect.ValueOf(specField)
-	statusVal := reflect.ValueOf(statusField)
-
-	if specVal.IsNil() {
-		return false
-	} else if statusVal.IsNil() {
-		return true
+	if len(unspecifiedFields) > 0 {
+		opts = append(
+			opts,
+			cmpopts.IgnoreFields(CheckParameters{}, unspecifiedFields...),
+		)
 	}
 
-	return !equal(specVal, statusVal)
-}
-
-func equal(va, vb reflect.Value) bool {
-	if !va.IsValid() || !vb.IsValid() {
-		return false
-	}
-	if va.Type() != vb.Type() {
-		panic(fmt.Sprintf("equal on different types (%v, %v)", va.Type(), vb.Type()))
-	}
-
-	vaKind := va.Kind()
-	vbKind := vb.Kind()
-	derefA := vaKind == reflect.Ptr || vaKind == reflect.Interface
-	derefB := vbKind == reflect.Ptr || vbKind == reflect.Interface
-
-	if derefA || derefB {
-		if derefA {
-			va = va.Elem()
-		}
-		if derefB {
-			vb = vb.Elem()
-		}
-		return equal(va, vb)
-	}
-
-	switch vaKind {
-	case reflect.Float32, reflect.Float64:
-		return va.Float() == vb.Float()
-	case reflect.Bool:
-		return va.Bool() == vb.Bool()
-	case reflect.Int, reflect.Int8, reflect.Int16, reflect.Int32, reflect.Int64:
-		return va.Int() == vb.Int()
-	case reflect.Uint, reflect.Uint8, reflect.Uint16, reflect.Uint32, reflect.Uint64:
-		return va.Uint() == vb.Uint()
-	case reflect.String:
-		return va.String() == vb.String()
-	default:
-		return false
-	}
+	return !cmp.Equal(spec.CheckParameters, status.CheckParameters, opts)
 }

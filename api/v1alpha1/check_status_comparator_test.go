@@ -71,7 +71,7 @@ var _ = Describe("CheckStatusComparator", func() {
 				Name: ptrS("quux"), Host: "quux", Type: Http, Port: ptrI32(80),
 			}},
 		}, BeTrue()),
-		Entry("with different paused setting", &Check{
+		Entry("with spec paused but status up", &Check{
 			Spec: CheckSpec{CheckParameters: CheckParameters{
 				Name: ptrS("quuz"), Host: "quuz", Type: Http,
 			}, Paused: ptrB(true)},
@@ -79,20 +79,36 @@ var _ = Describe("CheckStatusComparator", func() {
 				Name: ptrS("quuz"), Host: "quuz", Type: Http,
 			}, Status: Up},
 		}, BeTrue()),
-		Entry("with different URL", &Check{
+		Entry("with spec not paused but status paused", &Check{
 			Spec: CheckSpec{CheckParameters: CheckParameters{
-				Name: ptrS("corge"), Host: "corge", Type: Http, Url: ptrS("/text"),
+				Name: ptrS("corge"), Host: "corge", Type: Http,
+			}, Paused: ptrB(false)},
+			Status: CheckStatus{Id: 7, CheckParameters: CheckParameters{
+				Name: ptrS("corge"), Host: "corge", Type: Http,
+			}, Status: Paused},
+		}, BeTrue()),
+		Entry("with different User IDs", &Check{
+			Spec: CheckSpec{CheckParameters: CheckParameters{
+				Name: ptrS("grault"), Host: "grault", Type: Ping, UserIds: &[]int{22},
 			}},
 			Status: CheckStatus{Id: 7, CheckParameters: CheckParameters{
-				Name: ptrS("corge"), Host: "corge", Type: Http, Url: ptrS("/"),
+				Name: ptrS("grault"), Host: "grault", Type: Ping, UserIds: &[]int{2},
+			}},
+		}, BeTrue()),
+		Entry("with different URL", &Check{
+			Spec: CheckSpec{CheckParameters: CheckParameters{
+				Name: ptrS("garply"), Host: "garply", Type: Http, Url: ptrS("/text"),
+			}},
+			Status: CheckStatus{Id: 8, CheckParameters: CheckParameters{
+				Name: ptrS("garply"), Host: "garply", Type: Http, Url: ptrS("/"),
 			}},
 		}, BeTrue()),
 		Entry("with different encryption setting", &Check{
 			Spec: CheckSpec{CheckParameters: CheckParameters{
-				Name: ptrS("grault"), Host: "grault", Type: Http, Encryption: ptrB(true),
+				Name: ptrS("waldo"), Host: "waldo", Type: Http, Encryption: ptrB(true),
 			}},
-			Status: CheckStatus{Id: 8, CheckParameters: CheckParameters{
-				Name: ptrS("grault"), Host: "grault", Type: Http, Encryption: ptrB(false),
+			Status: CheckStatus{Id: 9, CheckParameters: CheckParameters{
+				Name: ptrS("waldo"), Host: "waldo", Type: Http, Encryption: ptrB(false),
 			}},
 		}, BeTrue()),
 	)

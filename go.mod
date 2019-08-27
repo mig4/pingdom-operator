@@ -5,6 +5,7 @@ go 1.12
 require (
 	github.com/giantswarm/microerror v0.0.0-20190815145748-cb07ec533b50
 	github.com/go-logr/logr v0.1.0
+	github.com/google/go-cmp v0.3.0
 	github.com/juju/errgo v0.0.0-20140925100237-08cceb5d0b53 // indirect
 	github.com/onsi/ginkgo v1.8.0
 	github.com/onsi/gomega v1.5.0

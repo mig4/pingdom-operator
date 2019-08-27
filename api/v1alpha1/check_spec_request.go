@@ -18,6 +18,7 @@ package v1alpha1
 import (
 	"fmt"
 	"strconv"
+	"strings"
 )
 
 /*
@@ -64,6 +65,10 @@ func (this *CheckSpec) PostParams() map[string]string {
 		params["port"] = strconv.FormatInt(int64(*this.Port), 10)
 	}
 
+	if this.UserIds != nil {
+		params["userids"] = intSliceToCommaSep(*this.UserIds)
+	}
+
 	if this.Url != nil {
 		params["url"] = *this.Url
 	}
@@ -103,4 +108,15 @@ func (this *CheckSpec) Valid() error {
 	}
 
 	return nil
+}
+
+func intSliceToCommaSep(intSlice []int) string {
+	return strings.Join(intSliceToStrSlice(intSlice), ",")
+}
+
+func intSliceToStrSlice(intSlice []int) (result []string) {
+	for _, item := range intSlice {
+		result = append(result, strconv.Itoa(item))
+	}
+	return
 }
