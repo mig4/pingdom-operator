@@ -75,6 +75,8 @@ spec:
               description: 'Target port Required for check types: tcp, udp Optional
                 for: http(80), httpcustom(80), smtp(25), pop3(110), imap(143)'
               format: int32
+              maximum: 65535
+              minimum: 1
               type: integer
             type:
               description: 'Type of check, can be one of: http, httpcustom, tcp, ping,
@@ -139,6 +141,8 @@ spec:
               description: 'Target port Required for check types: tcp, udp Optional
                 for: http(80), httpcustom(80), smtp(25), pop3(110), imap(143)'
               format: int32
+              maximum: 65535
+              minimum: 1
               type: integer
             status:
               description: Current check status
@@ -179,6 +183,7 @@ spec:
           - type
           type: object
       type: object
+  version: v1alpha1
   versions:
   - name: v1alpha1
     served: true
