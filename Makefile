@@ -1,6 +1,8 @@
-
+# Find current branch and commit/tag
+BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+VERSION := $(shell git describe --abbrev=0 --always --tags)
 # Image URL to use all building/pushing image targets
-IMG ?= registry.gitlab.com/mig4/pingdom-operator/controller:0.0.0
+IMG ?= registry.gitlab.com/mig4/pingdom-operator/$(BRANCH):$(VERSION)
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
 
@@ -37,6 +39,11 @@ install: manifests
 deploy: manifests
 	cd config/manager && kustomize edit set image controller=${IMG}
 	kustomize build config/default | kubectl apply -f -
+	@echo "🚀 deployed image:" ${IMG}
+
+# Undeploy the controller from the Kubernetest cluster
+destroy: manifests
+	kustomize build config/default | kubectl delete -f -
 
 # Generate manifests e.g. CRD, RBAC etc.
 manifests: controller-gen
