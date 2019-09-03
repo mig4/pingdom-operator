@@ -42,6 +42,7 @@ type CheckReconciler struct {
 
 // +kubebuilder:rbac:groups=observability.pingdom.mig4.gitlab.io,resources=checks,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=observability.pingdom.mig4.gitlab.io,resources=checks/status,verbs=get;update;patch
+// +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
 
 func (r *CheckReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
