@@ -38,7 +38,7 @@ func (cr *checkReconciler) read() error {
 	status.Name = &pdCheck.Name
 	status.Type = observabilityv1alpha1.CheckType(pdCheck.Type.Name)
 	status.Host = pdCheck.Hostname
-	status.UserIds = &pdCheck.UserIds
+	status.UserIds = ptrIntSlice(pdCheck.UserIds)
 	status.Status = observabilityv1alpha1.CheckResult(pdCheck.Status)
 	status.LastErrorTime = parsePdTime(pdCheck.LastErrorTime)
 	status.LastTestTime = parsePdTime(pdCheck.LastTestTime)
@@ -71,6 +71,19 @@ prtI32 returns a pointer to a given int32 value
 */
 func ptrI32(i int32) *int32 {
 	return &i
+}
+
+/*
+ptrIntSlice returns a pointer to an int slice
+If the given int slice is nil, it initialises a new empty slice and returns a
+pointer to it. This is because nil arrays fail validation when trying to update
+status subresource.
+*/
+func ptrIntSlice(s []int) *[]int {
+	if s == nil {
+		s = make([]int, 0)
+	}
+	return &s
 }
 
 /*
