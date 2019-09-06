@@ -43,7 +43,7 @@ var _ = Describe("CheckStatusComparator", func() {
 			}},
 			Status: CheckStatus{Id: 2, CheckParameters: CheckParameters{
 				Name: ptrS("bar"), Host: "bar", Type: Http,
-				Port: ptrI32(80), Url: ptrS("/"),
+				ResolutionMinutes: ptrI32(1), Port: ptrI32(80), Url: ptrS("/"),
 			}},
 		}, BeFalse()),
 		Entry("with more values in spec", &Check{
@@ -87,6 +87,14 @@ var _ = Describe("CheckStatusComparator", func() {
 				Name: ptrS("corge"), Host: "corge", Type: Http,
 			}, Status: Paused},
 		}, BeTrue()),
+		Entry("with different resolutions", &Check{
+			Spec: CheckSpec{CheckParameters: CheckParameters{
+				Name: ptrS("dres"), Host: "dres", Type: Ping, ResolutionMinutes: ptrI32(1),
+			}},
+			Status: CheckStatus{Id: 7, CheckParameters: CheckParameters{
+				Name: ptrS("dres"), Host: "dres", Type: Ping, ResolutionMinutes: ptrI32(5),
+			}},
+		}, BeTrue()),
 		Entry("with different User IDs", &Check{
 			Spec: CheckSpec{CheckParameters: CheckParameters{
 				Name: ptrS("grault"), Host: "grault", Type: Ping, UserIds: &[]int{22},
@@ -111,5 +119,17 @@ var _ = Describe("CheckStatusComparator", func() {
 				Name: ptrS("waldo"), Host: "waldo", Type: Http, Encryption: ptrB(false),
 			}},
 		}, BeTrue()),
+		Entry("with no difference with all parameters", &Check{
+			Spec: CheckSpec{CheckParameters: CheckParameters{
+				Name: ptrS("fred"), Host: "fred", Type: Http, Port: ptrI32(443),
+				ResolutionMinutes: ptrI32(1), UserIds: &[]int{42, 24},
+				Url: ptrS("/text"), Encryption: ptrB(true),
+			}, Paused: ptrB(true)},
+			Status: CheckStatus{Id: 10, CheckParameters: CheckParameters{
+				Name: ptrS("fred"), Host: "fred", Type: Http, Port: ptrI32(443),
+				ResolutionMinutes: ptrI32(1), UserIds: &[]int{42, 24},
+				Url: ptrS("/text"), Encryption: ptrB(true),
+			}, Status: Paused},
+		}, BeFalse()),
 	)
 })

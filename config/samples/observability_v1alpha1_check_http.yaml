@@ -5,6 +5,7 @@ metadata:
 spec:
   host: wtfismyip.com
   type: http
+  resolutionMinutes: 1
   url: /text
   paused: false
   credentialsSecret:

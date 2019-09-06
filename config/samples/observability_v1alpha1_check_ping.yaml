@@ -5,6 +5,7 @@ metadata:
 spec:
   host: error-service.io
   type: ping
+  resolutionMinutes: 1
   userids: [14407766]
   paused: false
   credentialsSecret:
