@@ -67,13 +67,14 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 		BeforeEach(func() {
 			spec = CheckSpec{
 				CheckParameters: CheckParameters{
-					Name:       ptrS("foo"),
-					Host:       "foo.example.com",
-					Type:       Http,
-					Port:       ptrI32(443),
-					UserIds:    &[]int{10, 20, 40},
-					Url:        ptrS("/text"),
-					Encryption: ptrB(true),
+					Name:              ptrS("foo"),
+					Host:              "foo.example.com",
+					Type:              Http,
+					Port:              ptrI32(443),
+					ResolutionMinutes: ptrI32(15),
+					UserIds:           &[]int{10, 20, 40},
+					Url:               ptrS("/text"),
+					Encryption:        ptrB(true),
 				},
 				Paused: ptrB(false),
 			}
@@ -83,6 +84,7 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 				"type":       "http",
 				"paused":     "false",
 				"port":       "443",
+				"resolution": "15",
 				"userids":    "10,20,40",
 				"url":        "/text",
 				"encryption": "true",

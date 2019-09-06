@@ -86,6 +86,10 @@ type CheckParameters struct {
 	// +optional
 	Port *int32 `json:"port,omitempty"`
 
+	// How often should the check be tested? (minutes)
+	// +optional
+	ResolutionMinutes *int32 `json:"resolutionMinutes,omitempty"`
+
 	// User identifiers of users who should receive alerts
 	// +optional
 	UserIds *[]int `json:"userids,omitempty"`

@@ -52,6 +52,9 @@ func (this *Check) NeedsUpdate() bool {
 	if spec.Port == nil {
 		unspecifiedFields = append(unspecifiedFields, "Port")
 	}
+	if spec.ResolutionMinutes == nil {
+		unspecifiedFields = append(unspecifiedFields, "ResolutionMinutes")
+	}
 	if spec.UserIds == nil {
 		unspecifiedFields = append(unspecifiedFields, "UserIds")
 	}

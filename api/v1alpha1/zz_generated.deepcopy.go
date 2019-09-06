@@ -95,6 +95,11 @@ func (in *CheckParameters) DeepCopyInto(out *CheckParameters) {
 		*out = new(int32)
 		**out = **in
 	}
+	if in.ResolutionMinutes != nil {
+		in, out := &in.ResolutionMinutes, &out.ResolutionMinutes
+		*out = new(int32)
+		**out = **in
+	}
 	if in.UserIds != nil {
 		in, out := &in.UserIds, &out.UserIds
 		*out = new([]int)

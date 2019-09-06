@@ -78,6 +78,10 @@ spec:
               maximum: 65535
               minimum: 1
               type: integer
+            resolutionMinutes:
+              description: How often should the check be tested? (minutes)
+              format: int32
+              type: integer
             type:
               description: 'Type of check, can be one of: http, httpcustom, tcp, ping,
                 dns, udp, smtp, pop3, imap'
@@ -143,6 +147,10 @@ spec:
               format: int32
               maximum: 65535
               minimum: 1
+              type: integer
+            resolutionMinutes:
+              description: How often should the check be tested? (minutes)
+              format: int32
               type: integer
             status:
               description: Current check status

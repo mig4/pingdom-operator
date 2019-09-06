@@ -65,6 +65,10 @@ func (this *CheckSpec) PostParams() map[string]string {
 		params["port"] = strconv.FormatInt(int64(*this.Port), 10)
 	}
 
+	if this.ResolutionMinutes != nil {
+		params["resolution"] = strconv.FormatInt(int64(*this.ResolutionMinutes), 10)
+	}
+
 	if this.UserIds != nil {
 		params["userids"] = intSliceToCommaSep(*this.UserIds)
 	}
@@ -107,6 +111,10 @@ func (this *CheckSpec) Valid() error {
 		return fmt.Errorf("Check `Port` must be between 1-65535")
 	}
 
+	if this.ResolutionMinutes != nil && !isValidResolution(*this.ResolutionMinutes) {
+		return fmt.Errorf("Check `ResolutionMinutes` must be one of 1, 5, 15, 30 or 60")
+	}
+
 	return nil
 }
 
@@ -119,4 +127,8 @@ func intSliceToStrSlice(intSlice []int) (result []string) {
 		result = append(result, strconv.Itoa(item))
 	}
 	return
+}
+
+func isValidResolution(res int32) bool {
+	return res == 1 || res == 5 || res == 15 || res == 30 || res == 60
 }
