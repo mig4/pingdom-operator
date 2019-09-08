@@ -2,10 +2,25 @@
 
 [![tag-badge][]]() [![goreport-badge][]][goreport-target] [![pipeline-badge][]][pipeline-target]
 
-A Kubernetes Operator that maintains resources (currently checks) in Pingdom.
+> Kubernetes Operator that maintains resources in Pingdom.
 
-Built with the help of [Kubebuilder](https://github.com/kubernetes-sigs/kubebuilder)
-framework.
+An operator that monitors CRDs and creates, updates or deletes resources in
+Pingdom (currently checks) to ensure they match the specification.
+
+![pingdom-operator-demo][demo-gif]
+
+Features:
+
+* support for **check** resources ✓
+  * supports `name`, `host`, `type`, `port`, `resolution`, `userids`, `url`
+    and `encryption` parameters
+  * supports pausing/un-pausing
+* support for _HTTP_, _TCP_, _Ping_, _SMTP_, _POP3_ and _IMAP_ check types
+  with common parameters
+* per-resource credentials (allows maintaining multiple Pingdom accounts from
+  a single Kubernetes installation)
+
+Built with the help of [Kubebuilder][] framework.
 
 ## Installing
 
@@ -115,6 +130,7 @@ Run tests with `make test` or `make gtest` (using
 [goreport-target]: https://goreportcard.com/report/gitlab.com/mig4/pingdom-operator
 [pipeline-badge]: https://gitlab.com/mig4/pingdom-operator/badges/master/pipeline.svg
 [pipeline-target]: https://gitlab.com/mig4/pingdom-operator/pipelines
+[demo-gif]: https://gitlab.com/mig4/pingdom-operator/uploads/d88c23b703d080e80a72356f0c27826e/pingdom-operator-demo.gif
 [gitlab]: https://gitlab.com/
 [registry]: https://gitlab.com/mig4/pingdom-operator/container_registry
 [gl-issues]: https://gitlab.com/mig4/pingdom-operator/issues
