@@ -32,8 +32,8 @@ Implements pingdom.Check interface.
 TODO: moving these methods to Check would allow e.g. PUT to be smarter and
   only output fields that have changed, or handling clearing of fields
 */
-func (this *CheckSpec) PutParams() map[string]string {
-	params := this.PostParams()
+func (cs *CheckSpec) PutParams() map[string]string {
+	params := cs.PostParams()
 	delete(params, "type")
 	return params
 }
@@ -46,39 +46,39 @@ Only non-nil properties of the CheckSpec are included in the resulting map.
 
 Implements pingdom.Check interface.
 */
-func (this *CheckSpec) PostParams() map[string]string {
-	if err := this.Valid(); err != nil {
+func (cs *CheckSpec) PostParams() map[string]string {
+	if err := cs.Valid(); err != nil {
 		return map[string]string{}
 	}
 
 	params := map[string]string{
-		"name": *this.Name,
-		"type": string(this.Type),
-		"host": this.Host,
+		"name": *cs.Name,
+		"type": string(cs.Type),
+		"host": cs.Host,
 	}
 
-	if this.Paused != nil {
-		params["paused"] = strconv.FormatBool(*this.Paused)
+	if cs.Paused != nil {
+		params["paused"] = strconv.FormatBool(*cs.Paused)
 	}
 
-	if this.Port != nil {
-		params["port"] = strconv.FormatInt(int64(*this.Port), 10)
+	if cs.Port != nil {
+		params["port"] = strconv.FormatInt(int64(*cs.Port), 10)
 	}
 
-	if this.ResolutionMinutes != nil {
-		params["resolution"] = strconv.FormatInt(int64(*this.ResolutionMinutes), 10)
+	if cs.ResolutionMinutes != nil {
+		params["resolution"] = strconv.FormatInt(int64(*cs.ResolutionMinutes), 10)
 	}
 
-	if this.UserIds != nil {
-		params["userids"] = intSliceToCommaSep(*this.UserIds)
+	if cs.UserIds != nil {
+		params["userids"] = intSliceToCommaSep(*cs.UserIds)
 	}
 
-	if this.Url != nil {
-		params["url"] = *this.Url
+	if cs.URL != nil {
+		params["url"] = *cs.URL
 	}
 
-	if this.Encryption != nil {
-		params["encryption"] = strconv.FormatBool(*this.Encryption)
+	if cs.Encryption != nil {
+		params["encryption"] = strconv.FormatBool(*cs.Encryption)
 	}
 
 	return params
@@ -90,29 +90,29 @@ accepted by the Pingdom API.
 
 Implements pingdom.Check interface.
 */
-func (this *CheckSpec) Valid() error {
-	if this.Name == nil || *this.Name == "" {
-		return fmt.Errorf("Check `Name` must be set and not empty")
+func (cs *CheckSpec) Valid() error {
+	if cs.Name == nil || *cs.Name == "" {
+		return fmt.Errorf("check `Name` must be set and not empty")
 	}
 
-	if this.Host == "" {
-		return fmt.Errorf("Check `Host` must not be empty")
+	if cs.Host == "" {
+		return fmt.Errorf("check `Host` must not be empty")
 	}
 
-	switch this.Type {
-	case Http, HttpCustom, Tcp, Ping, Dns, Udp, Smtp, Pop3, Imap:
+	switch cs.Type {
+	case HTTP, HTTPCustom, TCP, Ping, DNS, UDP, SMTP, POP3, IMAP:
 	default:
 		return fmt.Errorf(
-			"Check `Type` must be one of: http, httpcustom, tcp, ping, dns, udp, smtp, pop3, imap",
+			"check `Type` must be one of: http, httpcustom, tcp, ping, dns, udp, smtp, pop3, imap",
 		)
 	}
 
-	if this.Port != nil && (*this.Port < 1 || *this.Port > 65535) {
-		return fmt.Errorf("Check `Port` must be between 1-65535")
+	if cs.Port != nil && (*cs.Port < 1 || *cs.Port > 65535) {
+		return fmt.Errorf("check `Port` must be between 1-65535")
 	}
 
-	if this.ResolutionMinutes != nil && !isValidResolution(*this.ResolutionMinutes) {
-		return fmt.Errorf("Check `ResolutionMinutes` must be one of 1, 5, 15, 30 or 60")
+	if cs.ResolutionMinutes != nil && !isValidResolution(*cs.ResolutionMinutes) {
+		return fmt.Errorf("check `ResolutionMinutes` must be one of 1, 5, 15, 30 or 60")
 	}
 
 	return nil

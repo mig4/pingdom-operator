@@ -16,9 +16,9 @@ limitations under the License.
 package check
 
 func (cr *checkReconciler) delete() error {
-	log := cr.log.WithValues("action", "delete", "id", cr.check.Status.Id)
+	log := cr.log.WithValues("action", "delete", "id", cr.check.Status.ID)
 	log.Info("deleting check resource from Pingdom")
-	resp, err := cr.pdClient.Checks.Delete(int(cr.check.Status.Id))
+	resp, err := cr.pdClient.Checks.Delete(int(cr.check.Status.ID))
 	if err != nil {
 		log.Error(err, "unable to delete the Pingdom check resource")
 		return ignoreNotFound(err)

@@ -16,9 +16,9 @@ limitations under the License.
 package check
 
 func (cr *checkReconciler) update() error {
-	log := cr.log.WithValues("action", "update", "id", cr.check.Status.Id)
+	log := cr.log.WithValues("action", "update", "id", cr.check.Status.ID)
 	log.Info("updating check resource on Pingdom")
-	resp, err := cr.pdClient.Checks.Update(int(cr.check.Status.Id), &cr.check.Spec)
+	resp, err := cr.pdClient.Checks.Update(int(cr.check.Status.ID), &cr.check.Spec)
 	log.V(1).Info("Pingdom Checks.Update() response", "response", resp, "error", err)
 	if err == nil {
 		log.Info("updated check resource on Pingdom", "message", resp.Message)

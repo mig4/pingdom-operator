@@ -37,13 +37,15 @@ import (
 type CheckReconciler struct {
 	client.Client
 	Log      logr.Logger
-	PdApiKey string
+	PdAPIKey string
 }
 
 // +kubebuilder:rbac:groups=observability.pingdom.mig4.gitlab.io,resources=checks,verbs=get;list;watch;create;update;patch;delete
 // +kubebuilder:rbac:groups=observability.pingdom.mig4.gitlab.io,resources=checks/status,verbs=get;update;patch
 // +kubebuilder:rbac:groups="",resources=secrets,verbs=get;list;watch
 
+// Reconcile performs a single reconciliation run for a resource specified in
+// the given request.
 func (r *CheckReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	ctx := context.Background()
 	log := r.Log.WithValues("resource", "check", "namespacedName", req.NamespacedName)
@@ -92,7 +94,7 @@ func (r *CheckReconciler) Reconcile(req ctrl.Request) (ctrl.Result, error) {
 	// Ensure to update status subresource of the CRD in Kube when we're done
 	// so it's visible to users; do it later so it picks up any changes the
 	// reconciler makes to the object (like setting the ID initially)
-	defer r.updateStatus(log, ctx, &check)
+	defer r.updateStatus(ctx, log, &check)
 
 	// Ensure external resource (Pingdom check) matches desired spec
 	if err := reconciler.EnsureState(ctx); err != nil {
@@ -150,7 +152,7 @@ func (r *CheckReconciler) initPingdomClient(
 	pdClient, err := pingdom.NewClientWithConfig(pingdom.ClientConfig{
 		User:     string(secret.Data["user"]),
 		Password: string(secret.Data["password"]),
-		APIKey:   r.PdApiKey,
+		APIKey:   r.PdAPIKey,
 	})
 	if err != nil {
 		return nil, err
@@ -193,7 +195,7 @@ func (r *CheckReconciler) initCheckDefaults(
 		//   finalizers initially as we get an empty object and after adding
 		//   finalizers and giving that object to Update() it blows up because
 		//   the Status nested object is empty and so fails validation
-		check.Status.Type = observabilityv1alpha1.CheckType("ping")
+		check.Status.Type = observabilityv1alpha1.Ping
 		log.V(1).Info("using default Type", "type", check.Status.Type)
 	}
 }
@@ -207,8 +209,8 @@ Errors are only logged, not returned as a call to updateStatus should be
 deferred so there would be no way of handling the error.
 */
 func (r *CheckReconciler) updateStatus(
-	parentLog logr.Logger,
 	ctx context.Context,
+	parentLog logr.Logger,
 	check *observabilityv1alpha1.Check,
 ) {
 	log := parentLog.WithValues("action", "updateStatus")
@@ -223,6 +225,8 @@ func (r *CheckReconciler) updateStatus(
 	log.V(1).Info("updated object status")
 }
 
+// SetupWithManager configures this reconciler to be triggered for events
+// pertaining to specified resource kinds.
 func (r *CheckReconciler) SetupWithManager(mgr ctrl.Manager) error {
 	return ctrl.NewControllerManagedBy(mgr).
 		For(&observabilityv1alpha1.Check{}).

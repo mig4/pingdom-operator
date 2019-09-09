@@ -24,6 +24,8 @@ var invalidIdentifierError = pingdom.PingdomError{
 	Message:    "Invalid check identifier",
 }
 
+// IsInvalidIdentifierError returns true if given error returned by the Pingdom
+// API indicates a given ID was not found.
 func IsInvalidIdentifierError(err error) bool {
 	if err == nil {
 		return false

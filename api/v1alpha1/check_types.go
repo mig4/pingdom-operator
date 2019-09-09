@@ -20,43 +20,44 @@ import (
 	metav1 "k8s.io/apimachinery/pkg/apis/meta/v1"
 )
 
-// Type of check.
+// CheckType is a type of the check.
 // +kubebuilder:validation:Enum=http;httpcustom;tcp;ping;dns;udp;smtp;pop3;imap
 type CheckType string
 
 const (
-	// Check response to a HTTP request
-	Http CheckType = "http"
+	// HTTP is a check type that verifies response to a HTTP request
+	HTTP CheckType = "http"
 
-	// Check response to a custom HTTP request
-	HttpCustom CheckType = "httpcustom"
+	// HTTPCustom is a check type that verifies response to a custom HTTP request
+	HTTPCustom CheckType = "httpcustom"
 
-	// Send a packet to a TCP port
-	Tcp CheckType = "tcp"
+	// TCP is a check type that sends a packet to a TCP port
+	TCP CheckType = "tcp"
 
-	// Send a ping (ICMP request) to the host
+	// Ping is a check type that sends a ping (ICMP request) to the host
 	Ping CheckType = "ping"
 
-	// Try to resolve host using specified DNS server
-	Dns CheckType = "dns"
+	// DNS is a check type that tries to resolve host using specified DNS server
+	DNS CheckType = "dns"
 
-	// Send a packet to a UDP port
-	Udp CheckType = "udp"
+	// UDP is a check type that sends a packet to a UDP port
+	UDP CheckType = "udp"
 
-	// Open a connection to SMTP server
-	Smtp CheckType = "smtp"
+	// SMTP is a check type that opens a connection to SMTP server
+	SMTP CheckType = "smtp"
 
-	// Open a connection to a POP3 server
-	Pop3 CheckType = "pop3"
+	// POP3 is a check type that opens a connection to a POP3 server
+	POP3 CheckType = "pop3"
 
-	// Open a connection to an IMAP server
-	Imap CheckType = "imap"
+	// IMAP is a check type that opens a connection to an IMAP server
+	IMAP CheckType = "imap"
 )
 
-// Status/result of a check.
+// CheckResult is a status/result of a check.
 // +kubebuilder:validation:Enum=up;down;unconfirmed_down;unknown;paused
 type CheckResult string
 
+// Possible values of CheckResult, used in CheckStatus.Status
 const (
 	Up              CheckResult = "up"
 	Down            CheckResult = "down"
@@ -65,7 +66,7 @@ const (
 	Paused          CheckResult = "paused"
 )
 
-// Parameters of a Check in Pingdom
+// CheckParameters are parameters of a Check in Pingdom
 type CheckParameters struct {
 	// Check name; defaults to name of the object in Kubernetes
 	// +optional
@@ -99,7 +100,7 @@ type CheckParameters struct {
 	// Target path on server
 	// Defaults to `/`.
 	// +optional
-	Url *string `json:"url,omitempty"`
+	URL *string `json:"url,omitempty"`
 
 	// Connection encryption; defaults to false
 	// +optional
@@ -127,7 +128,7 @@ type CheckStatus struct {
 	CheckParameters `json:",inline"`
 
 	// Check identifier
-	Id int32 `json:"id"`
+	ID int32 `json:"id"`
 
 	// Current check status
 	Status CheckResult `json:"status"`

@@ -38,11 +38,12 @@ type finalizerManager struct {
 	finalizerName string
 }
 
+// New creates a new instance of finalizer Manager
 func New(
 	log logr.Logger,
 	client client.Client,
 	reconciler resources.ResourceReconciler,
-) FinalizerManager {
+) Manager {
 	baseName := reconciler.FinalizerName()
 	name := ""
 	haveFinalizer := baseName != nil
@@ -67,7 +68,7 @@ func (fm *finalizerManager) EnsureAttached(ctx context.Context, obj runtime.Obje
 		return nil
 	}
 
-	objMeta, err := meta.Accessor(obj)
+	objMeta, err := fm.accessor(obj)
 	if err != nil {
 		return microerror.Maskf(err, "cannot access ObjectMeta")
 	}
@@ -91,7 +92,7 @@ func (fm *finalizerManager) EnsureDetached(ctx context.Context, obj runtime.Obje
 		return nil
 	}
 
-	objMeta, err := meta.Accessor(obj)
+	objMeta, err := fm.accessor(obj)
 	if err != nil {
 		return microerror.Maskf(err, "cannot access ObjectMeta")
 	}

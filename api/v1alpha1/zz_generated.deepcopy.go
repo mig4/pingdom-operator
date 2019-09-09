@@ -109,8 +109,8 @@ func (in *CheckParameters) DeepCopyInto(out *CheckParameters) {
 			copy(*out, *in)
 		}
 	}
-	if in.Url != nil {
-		in, out := &in.Url, &out.Url
+	if in.URL != nil {
+		in, out := &in.URL, &out.URL
 		*out = new(string)
 		**out = **in
 	}

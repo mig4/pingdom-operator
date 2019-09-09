@@ -23,7 +23,7 @@ func (cr *checkReconciler) create() error {
 		"Pingdom Checks.Create() response", "response", resp, "error", err,
 	)
 	if err == nil {
-		cr.check.Status.Id = int32(resp.ID)
+		cr.check.Status.ID = int32(resp.ID)
 		log.Info("created check resource on Pingdom", "id", resp.ID)
 		cr.didWork = true
 	}

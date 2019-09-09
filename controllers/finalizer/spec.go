@@ -22,10 +22,10 @@ import (
 )
 
 /*
-FinalizerManager manages resistration and de-registration of a finalizer on an
+Manager manages resistration and de-registration of a finalizer on an
 API object in an idempotent way.
 */
-type FinalizerManager interface {
+type Manager interface {
 	/*
 	   EnsureAttached ensures a finalizer for the configured reconciler is
 	   registered on the API object.
