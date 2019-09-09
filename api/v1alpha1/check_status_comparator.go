@@ -31,9 +31,9 @@ Optional fields that aren't set in the Spec do not affect the comparison (in
 this case the field in Status may still be set as it reflects the default value
 returned from Pingdom API, but that's of no consequence).
 */
-func (this *Check) NeedsUpdate() bool {
-	spec := &this.Spec
-	status := &this.Status
+func (c *Check) NeedsUpdate() bool {
+	spec := &c.Spec
+	status := &c.Status
 
 	if spec.Paused != nil {
 		if *spec.Paused && status.Status != Paused {
@@ -58,8 +58,8 @@ func (this *Check) NeedsUpdate() bool {
 	if spec.UserIds == nil {
 		unspecifiedFields = append(unspecifiedFields, "UserIds")
 	}
-	if spec.Url == nil {
-		unspecifiedFields = append(unspecifiedFields, "Url")
+	if spec.URL == nil {
+		unspecifiedFields = append(unspecifiedFields, "URL")
 	}
 	if spec.Encryption == nil {
 		unspecifiedFields = append(unspecifiedFields, "Encryption")

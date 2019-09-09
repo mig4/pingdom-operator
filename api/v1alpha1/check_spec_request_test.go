@@ -69,11 +69,11 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 				CheckParameters: CheckParameters{
 					Name:              ptrS("foo"),
 					Host:              "foo.example.com",
-					Type:              Http,
+					Type:              HTTP,
 					Port:              ptrI32(443),
 					ResolutionMinutes: ptrI32(15),
 					UserIds:           &[]int{10, 20, 40},
-					Url:               ptrS("/text"),
+					URL:               ptrS("/text"),
 					Encryption:        ptrB(true),
 				},
 				Paused: ptrB(false),
@@ -117,7 +117,7 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 			params = map[string]string{}
 		})
 
-		AssertFailure("Check `Name` must be set")
+		AssertFailure("check `Name` must be set")
 	})
 
 	Context("When the Spec contains invalid values", func() {
@@ -131,6 +131,6 @@ var _ = Describe("CheckSpecRequest Adapter", func() {
 			params = map[string]string{}
 		})
 
-		AssertFailure("Check `Type` must be one of")
+		AssertFailure("check `Type` must be one of")
 	})
 })

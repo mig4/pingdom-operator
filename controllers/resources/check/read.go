@@ -24,11 +24,11 @@ import (
 
 func (cr *checkReconciler) read() error {
 	status := &cr.check.Status
-	checkId := status.Id
-	log := cr.log.WithValues("action", "read", "id", checkId)
+	checkID := status.ID
+	log := cr.log.WithValues("action", "read", "id", checkID)
 
 	log.V(1).Info("fetching check resource from Pingdom")
-	pdCheck, err := cr.pdClient.Checks.Read(int(checkId))
+	pdCheck, err := cr.pdClient.Checks.Read(int(checkID))
 	if err != nil {
 		log.Error(err, "unable to fetch check resource from Pingdom")
 		return microerror.Maskf(err, "unable to fetch check resource from Pingdom")
@@ -45,16 +45,16 @@ func (cr *checkReconciler) read() error {
 	status.LastTestTime = parsePdTime(pdCheck.LastTestTime)
 	status.LastResponseTimeMilis = &pdCheck.LastResponseTime
 	status.CreatedTime = *parsePdTime(pdCheck.Created)
-	if pdCheck.Type.Name == string(observabilityv1alpha1.Http) {
+	if pdCheck.Type.Name == string(observabilityv1alpha1.HTTP) {
 		if pdCheck.Type.HTTP == nil {
 			err = microerror.New("check type is http but details not available")
 			log.Error(err, "Pingdom API didn't return http check details")
 			return err
 		}
 		status.Port = ptrI32(int32(pdCheck.Type.HTTP.Port))
-		status.Url = &pdCheck.Type.HTTP.Url
+		status.URL = &pdCheck.Type.HTTP.Url
 		status.Encryption = &pdCheck.Type.HTTP.Encryption
-	} else if pdCheck.Type.Name == string(observabilityv1alpha1.Tcp) {
+	} else if pdCheck.Type.Name == string(observabilityv1alpha1.TCP) {
 		if pdCheck.Type.TCP == nil {
 			err = microerror.New("check type is tcp but details not available")
 			log.Error(err, "Pingdom API didn't return tcp check details")

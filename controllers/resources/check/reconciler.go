@@ -19,13 +19,14 @@ import (
 	"context"
 )
 
+// Name describes the object this reconciler maintains
 var Name = "check-resource"
 
 func (cr *checkReconciler) RefreshState(ctx context.Context) error {
 	status := &cr.check.Status
-	checkId := status.Id
-	log := cr.log.WithValues("action", "refreshState", "id", checkId)
-	if cr.check.Status.Id == 0 {
+	checkID := status.ID
+	log := cr.log.WithValues("action", "refreshState", "id", checkID)
+	if cr.check.Status.ID == 0 {
 		log.Info("Pingdom resource doesn't exist yet, nothing to refresh")
 		return nil
 	}
@@ -36,15 +37,16 @@ func (cr *checkReconciler) EnsureState(ctx context.Context) (err error) {
 	log := cr.log.WithValues("action", "ensureState")
 	log.Info("entered reconciling external resource state")
 
-	if !cr.check.GetDeletionTimestamp().IsZero() {
+	switch {
+	case !cr.check.GetDeletionTimestamp().IsZero():
 		err = cr.delete()
-	} else if cr.check.Status.Id == 0 {
+	case cr.check.Status.ID == 0:
 		err = cr.create()
-	} else if cr.check.NeedsUpdate() {
+	case cr.check.NeedsUpdate():
 		err = cr.update()
-	} else {
+	default:
 		log.V(1).Info(
-			"check is up-to-date with regards to its spec", "id", cr.check.Status.Id,
+			"check is up-to-date with regards to its spec", "id", cr.check.Status.ID,
 		)
 	}
 
