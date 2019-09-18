@@ -1,8 +1,13 @@
 # Find current branch and commit/tag
-BRANCH := $(shell git rev-parse --abbrev-ref HEAD)
+ifeq (0,$(shell git tag -l --points-at HEAD | wc -l))
+BRANCH := /$(shell git rev-parse --abbrev-ref HEAD)
+VERSION := $(shell git rev-parse HEAD)
+else
+BRANCH := 
 VERSION := $(shell git describe --abbrev=0 --always --tags)
+endif
 # Image URL to use all building/pushing image targets
-IMG ?= registry.gitlab.com/mig4/pingdom-operator/$(BRANCH):$(VERSION)
+IMG ?= registry.gitlab.com/mig4/pingdom-operator$(BRANCH):$(VERSION)
 # Produce CRDs that work back to Kubernetes 1.11 (no version conversion)
 CRD_OPTIONS ?= "crd:trivialVersions=true"
 
